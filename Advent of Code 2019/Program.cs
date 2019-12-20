@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -784,40 +784,26 @@ namespace Advent_of_Code_2019
 
         static int Day10Puzzle1()
         {
-
-            List<string> test2 = new List<string>() { "#.#", ".#.", "#.#", ".#." };
-            test2 = new List<string>() {
-                "......#.#.",
-                "#..#.#....",
-                "..#######.",
-                ".#.#.###..",
-                ".#..#.....",
-                "..#....#.#",
-                "#..#....#.",
-                ".##.#..###",
-                "##...#..#.",
-                ".#....####" };
-
-            var test3 = test2.Select(t => t.Select(t2 => t2).ToArray()).ToArray();
-
-
-            //char[,] test3 = null;
-
+            var file = new StreamReader(@"..\..\Data\Day10.txt");
+            List<string> lines = new List<string>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                //var pair = line.Split(')');
+                lines.Add(line);
+            }
 
             List<Tuple<int, int>> coords = new List<Tuple<int, int>>();
-            for (int i = 0; i < test2.Count(); i++)
+            for (int i = 0; i < lines.Count; i++)
             {
-                for (int j = 0; j < test2[0].Length; j++)
+                for (int j = 0; j < lines[0].Count(); j++)
                 {
-                    if (test3[i][j] == '#')
+                    if (lines[i][j] == '#')
                         coords.Add(Tuple.Create(j, i));
                 }
             }
 
-            var coords2 = coords.Select(c => new { x = c.Item1, y = c.Item2 });
-            var numCoords = coords2.Count();
-
-            Dictionary<Tuple<int, int>, int> qqqqqqqq = new Dictionary<Tuple<int, int>, int>();
+            Dictionary<Tuple<int, int>, int> visibleAsteroids = new Dictionary<Tuple<int, int>, int>();
             foreach (var coord in coords)
             {
                 var distances = coords.Where(c => c != coord).Select(c => new { x = coord.Item1 - c.Item1, y = coord.Item2 - c.Item2 });
@@ -827,15 +813,12 @@ namespace Advent_of_Code_2019
 
                 var uniqueDistances = reducedDistances.Distinct();
 
-                qqqqqqqq.Add(coord, uniqueDistances.Count());
+                visibleAsteroids.Add(coord, uniqueDistances.Count());
             }
 
-            var qq = qqqqqqqq.OrderBy(q => q.Value).ToList();
-            var jhkfgdlsjflks = qq.First();
-            var jhkfgdlsjflks2 = qq.Last();
-
-
-            return 0;
+            var orderedVisAst = visibleAsteroids.OrderBy(q => q.Value).ToList();
+            var mostVis = orderedVisAst.Last();
+            return mostVis.Value;
         }
         static int GCD(int x, int y)
         {
