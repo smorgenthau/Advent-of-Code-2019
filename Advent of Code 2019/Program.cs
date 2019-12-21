@@ -53,6 +53,13 @@ namespace Advent_of_Code_2019
             var d10P2 = Day10Puzzle2();
             Console.WriteLine($"Day 10 - Puzzle 1: {d10P1} Puzzle 2: {d10P2}");
 
+            //var d11P1 = Day11Puzzle1();
+            //var d11P2 = Day11Puzzle2();
+            //Console.WriteLine($"Day 11 - Puzzle 1: {d11P1} Puzzle 2: {d11P2}");
+
+            var d12P1 = Day12Puzzle1();
+            var d12P2 = Day12Puzzle2();
+            Console.WriteLine($"Day 12 - Puzzle 1: {d12P1} Puzzle 2: {d12P2}");
 
             //var d10P1 = Day10Puzzle1();
             //var d10P2 = Day10Puzzle2();
@@ -892,6 +899,74 @@ namespace Advent_of_Code_2019
         }
 
 
+        static int Day11Puzzle1()
+        {
+
+            return 0;
+        } //Finish 9.2 first
+        static int Day11Puzzle2()
+        {
+
+            return 0;
+        } //Finish 9.2 first
+
+
+
+        static int Day12Puzzle1()
+        {
+            var file = new StreamReader(@"..\..\Data\Day12.txt");
+            List<Moon> moons = new List<Moon>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                var tempLine = line.Replace("<", "").Replace(">", "").Split(',').Select(x => x.Split('=')).Select(x => new { key = x[0].Trim(), value = int.Parse(x[1]) });//.Select(l => new {key = l[;
+                Dictionary<string, int> test = new Dictionary<string, int>();
+                foreach (var temp in tempLine)
+                {
+                    test.Add(temp.key, temp.value);
+                }
+
+                moons.Add(new Moon(test["x"], test["y"], test["z"]));
+            }
+
+            for (int step = 1; step <= 1000; step++)
+            {
+                foreach (var moon in moons)
+                {
+                    var xChange = moons.Count(m => m.PosX > moon.PosX) - moons.Count(m => m.PosX < moon.PosX);
+                    var yChange = moons.Count(m => m.PosY > moon.PosY) - moons.Count(m => m.PosY < moon.PosY);
+                    var zChange = moons.Count(m => m.PosZ > moon.PosZ) - moons.Count(m => m.PosZ < moon.PosZ);
+
+
+                    moon.PrepMove(xChange, yChange, zChange);
+                }
+
+                moons.ForEach(m => m.Move());
+
+                //if (step % 10 == 0)
+                //{
+                //    Console.WriteLine($"After {step} steps:");
+                //    moons.ForEach(m => Console.WriteLine($"pos={m.GetPos()}, vel={m.GetVel()}"));
+                //}
+            }
+
+            int totalEnergy = 0;
+            foreach (var moon in moons)
+            {
+                totalEnergy += moon.Energy();
+            }
+
+            return totalEnergy;
+
+
+
+        }
+        static int Day12Puzzle2()
+        {
+
+            return 0;
+        }
+
         //static int Day10Puzzle1()
         //{
 
@@ -1165,6 +1240,91 @@ namespace Advent_of_Code_2019
             }
 
             return returner;
+        }
+    }
+
+
+    public class Moon
+    {
+        public int PosX;
+        public int PosY;
+        public int PosZ;
+
+        public int VelX;
+        public int VelY;
+        public int VelZ;
+
+        public int AccelX;
+        public int AccelY;
+        public int AccelZ;
+
+        public Moon(int x, int y, int z)
+        {
+            PosX = x;
+            PosY = y;
+            PosZ = z;
+
+            VelX = 0;
+            VelY = 0;
+            VelZ = 0;
+
+        }
+
+
+        public void Move(int x, int y, int z)
+        {
+            VelX += x;
+            VelY += y;
+            VelZ += z;
+
+            PosX += VelX;
+            PosY += VelY;
+            PosZ += VelZ;
+
+            AccelX = 0;
+            AccelY = 0;
+            AccelZ = 0;
+        }
+
+        public void PrepMove(int x, int y, int z)
+        {
+            AccelX = x;
+            AccelY = y;
+            AccelZ = z;
+        }
+
+        public void Move()
+        {
+            VelX += AccelX;
+            VelY += AccelY;
+            VelZ += AccelZ;
+
+            PosX += VelX;
+            PosY += VelY;
+            PosZ += VelZ;
+
+            AccelX = 0;
+            AccelY = 0;
+            AccelZ = 0;
+        }
+
+        public int Energy()
+        {
+            int potential = Math.Abs(PosX) + Math.Abs(PosY) + Math.Abs(PosZ);
+            int kinetic = Math.Abs(VelX) + Math.Abs(VelY) + Math.Abs(VelZ);
+
+            return potential * kinetic;
+        }
+
+
+        public string GetPos()
+        {
+            return $"<x={PosX}, y={PosY}, z={PosZ}>";
+        }
+
+        public string GetVel()
+        {
+            return $"<x={VelX}, y={VelY}, z={VelZ}>";
         }
     }
 }
