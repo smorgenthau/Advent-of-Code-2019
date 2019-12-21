@@ -548,7 +548,7 @@ namespace Advent_of_Code_2019
         {
             var seed = new List<string>();
             string line = "";
-            var file = new StreamReader(@"..\..\Data\Day6.txt");
+            var file = new StreamReader(@"..\..\Data\Day06.txt");
 
             Dictionary<string, string> orbitList = new Dictionary<string, string>();
             while ((line = file.ReadLine()) != null)
@@ -577,7 +577,7 @@ namespace Advent_of_Code_2019
         {
             var seed = new List<string>();
             string line = "";
-            var file = new StreamReader(@"..\..\Data\Day6.txt");
+            var file = new StreamReader(@"..\..\Data\Day06.txt");
 
             Dictionary<string, string> orbitList = new Dictionary<string, string>();
             Dictionary<string, List<string>> orbitRelations = new Dictionary<string, List<string>>();
