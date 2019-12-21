@@ -833,8 +833,62 @@ namespace Advent_of_Code_2019
         }
         static int Day10Puzzle2()
         {
+            var file = new StreamReader(@"..\..\Data\Day10.txt");
+            List<string> lines = new List<string>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                //var pair = line.Split(')');
+                lines.Add(line);
+            }
 
-            return 0;
+            List<Tuple<int, int>> coords = new List<Tuple<int, int>>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                for (int j = 0; j < lines[0].Count(); j++)
+                {
+                    if (lines[i][j] == '#')
+                        coords.Add(Tuple.Create(j, i));
+                }
+            }
+
+            //Dictionary<Tuple<int, int>, int> visibleAsteroids = new Dictionary<Tuple<int, int>, int>();
+            //foreach (var coord in coords)
+            //{
+            //    var distances = coords.Where(c => c != coord).Select(c => new { x = coord.Item1 - c.Item1, y = coord.Item2 - c.Item2 });
+            //    var reducedDistances = from d in distances
+            //                           let gcd = Math.Abs(GCD(d.x, d.y))
+            //                           select new { x = d.x / gcd, y = d.y / gcd };
+
+            //    var uniqueDistances = reducedDistances.Distinct();
+            //    visibleAsteroids.Add(coord, uniqueDistances.Count());
+            //}
+
+            //var orderedVisAst = visibleAsteroids.OrderBy(q => q.Value).ToList();
+            //var mostVis = orderedVisAst.Last();
+
+
+            var bestCoords = Tuple.Create(26, 36); // mostVis.Key;
+            var relativeCoords = coords.Where(c => c != bestCoords).Select(c => new { x = bestCoords.Item1 - c.Item1, y = bestCoords.Item2 - c.Item2 });
+
+            var polarCoords = relativeCoords.Select(c => new { theta = Math.Atan2(c.y, c.x), r = Hypotenuse(c.x, c.y) }); //Math.Atan((double)c.y / c.x)
+            var modifiedPolar = polarCoords.Select(p => new { theta = ((Math.PI * 5 / 2) - p.theta) % (Math.PI * 2), p.r }).ToList();
+            var groupedPolar = modifiedPolar.GroupBy(p => p.theta).SelectMany(g => g.Select((coord, occur) => new { theta = coord.theta + (10 * occur), coord.r })); //, occur }));
+            var orderedPolar = groupedPolar.OrderBy(p => p.theta).ToList();//.ThenBy(p => p.r).ToList();
+
+            var asteroid = orderedPolar[199];
+            var test2 = modifiedPolar.OrderBy(t => t.theta).ToList();
+            var index = modifiedPolar.FindIndex(p => p.theta == asteroid.theta && p.r == asteroid.r);
+            var test = coords[index];
+
+            var relativeCartesian = new { x = asteroid.r * Math.Cos(asteroid.theta), y = asteroid.r * Math.Sin(asteroid.theta) };
+            var trueCartesian = new { x = (int)Math.Round(bestCoords.Item1 - relativeCartesian.x), y = (int)Math.Round(bestCoords.Item2 - relativeCartesian.y) };
+            return trueCartesian.x * 100 + trueCartesian.y;
+        }
+
+        static double Hypotenuse(int x, int y)
+        {
+            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
         }
 
 
