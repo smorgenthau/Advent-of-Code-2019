@@ -964,7 +964,94 @@ namespace Advent_of_Code_2019
         static int Day12Puzzle2()
         {
 
-            return 0;
+            var file = new StreamReader(@"..\..\Data\Day12.txt");
+            List<Moon> moons = new List<Moon>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                var tempLine = line.Replace("<", "").Replace(">", "").Split(',').Select(x => x.Split('=')).Select(x => new { key = x[0].Trim(), value = int.Parse(x[1]) });//.Select(l => new {key = l[;
+                Dictionary<string, int> test = new Dictionary<string, int>();
+                foreach (var temp in tempLine)
+                {
+                    test.Add(temp.key, temp.value);
+                }
+
+                moons.Add(new Moon(test["x"], test["y"], test["z"]));
+            }
+
+
+            List<int> OriginX = new List<int>();
+            List<int> OriginY = new List<int>();
+            List<int> OriginZ = new List<int>();
+            foreach(var moon in moons)
+            {
+                OriginX.AddRange(moon.GetX());
+                OriginY.AddRange(moon.GetY());
+                OriginZ.AddRange(moon.GetZ());
+            }
+
+            int freqX = 0;
+            int freqY = 0;
+            int freqZ = 0;
+            int step = 0;
+            while (freqX == 0 || freqY == 0 || freqZ == 0)
+            {
+                foreach (var moon in moons)
+                {
+                    var xChange = moons.Count(m => m.PosX > moon.PosX) - moons.Count(m => m.PosX < moon.PosX);
+                    var yChange = moons.Count(m => m.PosY > moon.PosY) - moons.Count(m => m.PosY < moon.PosY);
+                    var zChange = moons.Count(m => m.PosZ > moon.PosZ) - moons.Count(m => m.PosZ < moon.PosZ);
+
+
+                    moon.PrepMove(xChange, yChange, zChange);
+                }
+
+                moons.ForEach(m => m.Move());
+                step++;
+
+                List<int> NewX = new List<int>();
+                List<int> NewY = new List<int>();
+                List<int> NewZ = new List<int>();
+                foreach (var moon in moons)
+                {
+                    NewX.AddRange(moon.GetX());
+                    NewY.AddRange(moon.GetY());
+                    NewZ.AddRange(moon.GetZ());
+                }
+
+                if (freqX == 0 && OriginX.SequenceEqual(NewX))
+                {
+                    freqX = step;
+                }
+                if (freqY == 0 && OriginY.SequenceEqual(NewY))
+                {
+                    freqY = step;
+                }
+                if (freqZ == 0 && OriginZ.SequenceEqual(NewZ))
+                {
+                    freqZ = step;
+                }
+
+            }
+
+            var factors = new int[] { freqX, freqY, freqZ };
+            var returner = LCM(factors);
+
+            return returner;
+        }
+
+        static int LCM(int[] factors) //Need to fix, had to use only tool to find LCM
+        {
+            int runningGCD = factors[0];
+            long product = factors[0];
+            for(int i = 1; i < factors.Length; i++)
+            {
+                runningGCD = GCD(runningGCD, factors[i]);
+                product *= factors[i];
+            }
+
+            var result = product / runningGCD;
+            return (int)result;
         }
 
         //static int Day10Puzzle1()
@@ -1325,6 +1412,19 @@ namespace Advent_of_Code_2019
         public string GetVel()
         {
             return $"<x={VelX}, y={VelY}, z={VelZ}>";
+        }
+
+        public List<int> GetX()
+        {
+            return new List<int>() { PosX, VelX };
+        }
+        public List<int> GetY()
+        {
+            return new List<int>() { PosY, VelY };
+        }
+        public List<int> GetZ()
+        {
+            return new List<int>() { PosZ, VelZ };
         }
     }
 }
