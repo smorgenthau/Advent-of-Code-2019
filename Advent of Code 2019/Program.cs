@@ -37,8 +37,8 @@ namespace Advent_of_Code_2019
             Console.WriteLine($"Day 6 - Puzzle 1: {d6P1} Puzzle 2: {d6P2}");
 
             var d7P1 = Day7Puzzle1();
-            //var d7P2 = Day7Puzzle2();
-            Console.WriteLine($"Day 7 - Puzzle 1: {d7P1}");// Puzzle 2: {d7P2}");
+            var d7P2 = Day7Puzzle2();
+            Console.WriteLine($"Day 7 - Puzzle 1: {d7P1} Puzzle 2: {d7P2}");
 
             var d8P1 = Day8Puzzle1();
             Console.WriteLine($"Day 8 - Puzzle 1: {d8P1}");
@@ -623,8 +623,27 @@ namespace Advent_of_Code_2019
                                     var third = new Compiler(seedCopy3, order[2]);
                                     var fourth = new Compiler(seedCopy4, order[3]);
                                     var fifth = new Compiler(seedCopy5, order[4]);
+
+                                    List<int> finalResult = new List<int>();
+                                    while (!fifth.HasTerminated)
+                                    {
+                                        var firstResult = first.Compile();
+                                        second.AddInputs(firstResult.ToArray());
+                                        var secondResult = second.Compile();
+                                        third.AddInputs(secondResult.ToArray());
+                                        var thirdResult = third.Compile();
+                                        fourth.AddInputs(thirdResult.ToArray());
+                                        var fourthResult = fourth.Compile();
+                                        fifth.AddInputs(fourthResult.ToArray());
+                                        var fifthResult = fifth.Compile();
+                                        first.AddInputs(fifthResult.ToArray());
+
+
+                                        finalResult = fifthResult;
+                                    }
+
                                     string key = $"{order[0]}{order[1]}{order[2]}{order[3]}{order[4]}";
-                                    tests.Add(key, result);
+                                    tests.Add(key, finalResult.Last());
                                 }
                             }
 
