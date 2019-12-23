@@ -118,7 +118,10 @@ namespace Advent_of_Code_2019
             seed[1] = 12;
             seed[2] = 2;
 
-            return Complier(seed);
+            Compiler compiler = new Compiler(seed);
+            compiler.Compile();
+
+            return seed[0];
         }
         static int Day2Puzzle2()
         {
@@ -135,8 +138,13 @@ namespace Advent_of_Code_2019
                     seedCopy[1] = first;
                     seedCopy[2] = second;
 
-                    if (Complier(seedCopy) == 19690720)
+                    Compiler compiler = new Compiler(seedCopy);
+                    compiler.Compile();
+
+                    if (seedCopy[0] == 19690720)
+                    {
                         return first * 100 + second;
+                    }
                 }
             }
 
@@ -408,8 +416,12 @@ namespace Advent_of_Code_2019
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                    .Select(f => int.Parse(f)).ToList();
-            
-            return Complier(seed, 1);
+
+            Compiler compiler = new Compiler(seed);
+            compiler.AddInputs(1);
+            var output = compiler.Compile();
+
+            return output.Last();
         }
         static int Day5Puzzle2()
         {
@@ -417,8 +429,12 @@ namespace Advent_of_Code_2019
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                    .Select(f => int.Parse(f)).ToList();
-            
-            return Complier(seed, 5);
+
+            Compiler compiler = new Compiler(seed);
+            compiler.AddInputs(5);
+            var output = compiler.Compile();
+
+            return output.Last();
         }
 
 
@@ -539,14 +555,29 @@ namespace Advent_of_Code_2019
                                 var order = new List<int> { i, j, k, l, m };
                                 if (order.Distinct().Count() == 5)
                                 {
-                                    var first = Complier(seed, order[0], 0);
-                                    var second = Complier(seed, order[1], first);
-                                    var third = Complier(seed, order[2], second);
-                                    var fourth = Complier(seed, order[3], third);
-                                    var result = Complier(seed, order[4], fourth);
+                                    var seedCopy1 = new List<int>(seed);
+                                    var seedCopy2 = new List<int>(seed);
+                                    var seedCopy3 = new List<int>(seed);
+                                    var seedCopy4 = new List<int>(seed);
+                                    var seedCopy5 = new List<int>(seed);
+
+                                    var first = new Compiler(seedCopy1, order[0], 0);
+                                    var firstResult = first.Compile();
+
+                                    var second = new Compiler(seedCopy2, order[1], firstResult.Last());
+                                    var secondResult = second.Compile();
+                                    
+                                    var third = new Compiler(seedCopy3, order[2], secondResult.Last());
+                                    var thirdResult = third.Compile();
+                                    
+                                    var fourth = new Compiler(seedCopy4, order[3], thirdResult.Last());
+                                    var fourthResult = fourth.Compile();
+                                    
+                                    var fifth = new Compiler(seedCopy5, order[4], fourthResult.Last());
+                                    var fifthResult = fifth.Compile();
 
                                     string key = $"{order[0]}{order[1]}{order[2]}{order[3]}{order[4]}";
-                                    tests.Add(key, result);
+                                    tests.Add(key, fifthResult.Last());
                                 }
                             }
 
@@ -581,12 +612,17 @@ namespace Advent_of_Code_2019
                                 var order = new List<int> { i, j, k, l, m };
                                 if (order.Distinct().Count() == 5)
                                 {
-                                    var first = Complier(seed, order[0], 0);
-                                    var second = Complier(seed, order[1], first);
-                                    var third = Complier(seed, order[2], second);
-                                    var fourth = Complier(seed, order[3], third);
-                                    var result = Complier(seed, order[4], fourth);
+                                    var seedCopy1 = new List<int>(seed);
+                                    var seedCopy2 = new List<int>(seed);
+                                    var seedCopy3 = new List<int>(seed);
+                                    var seedCopy4 = new List<int>(seed);
+                                    var seedCopy5 = new List<int>(seed);
 
+                                    var first = new Compiler(seedCopy1, order[0], 0);
+                                    var second = new Compiler(seedCopy2, order[1]);
+                                    var third = new Compiler(seedCopy3, order[2]);
+                                    var fourth = new Compiler(seedCopy4, order[3]);
+                                    var fifth = new Compiler(seedCopy5, order[4]);
                                     string key = $"{order[0]}{order[1]}{order[2]}{order[3]}{order[4]}";
                                     tests.Add(key, result);
                                 }
@@ -1061,11 +1097,9 @@ namespace Advent_of_Code_2019
         }
 
 
-        static int ComplierSeries(List<int> seed, int chainCount, bool loop, params int[] inputs)
-        {
+        //    return 0;
+        //}
 
-            return 0;
-        }
     }
 
 
@@ -1074,8 +1108,11 @@ namespace Advent_of_Code_2019
     public class Compiler
     {
         private int curPos;
+        private int inputStep;
         private List<int> seed;
         private List<int> inputs;
+
+        public bool HasTerminated { get; private set; }
 
         public Compiler()
         {
@@ -1083,18 +1120,25 @@ namespace Advent_of_Code_2019
             inputs = new List<int>();
         }
 
+        public Compiler(List<int> seed, params int[] inputs)
+        {
+            this.seed = seed;
+            this.inputs = inputs.ToList();
+        }
+
         public void AddInputs(params int[] inputs)
         {
             this.inputs.AddRange(inputs);
         }
+               
+        public void Seed(List<int> seed)
+        {
+            this.seed = seed;
+        }
 
-
-
-
-        public List<int> Compile(params int[] inputs)
+        public List<int> Compile()
         {
             List<int> returner = new List<int>();
-            int inputStep = 0;
             while (curPos < seed.Count())
             {
                 int steps = 0;
@@ -1200,6 +1244,7 @@ namespace Advent_of_Code_2019
                         }
                         break;
                     case 99: //exit
+                        HasTerminated = true;
                         return returner;
                     default: //we fucked up
                         return null;
