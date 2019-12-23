@@ -61,6 +61,14 @@ namespace Advent_of_Code_2019
             var d12P2 = Day12Puzzle2();
             Console.WriteLine($"Day 12 - Puzzle 1: {d12P1} Puzzle 2: {d12P2}");
 
+            //var d13P1 = Day13Puzzle1();
+            //var d13P2 = Day13Puzzle2();
+            //Console.WriteLine($"Day 13 - Puzzle 1: {d13P1} Puzzle 2: {d13P2}");
+
+            var d14P1 = Day14Puzzle1();
+            var d14P2 = Day14Puzzle2();
+            Console.WriteLine($"Day 13 - Puzzle 1: {d14P1} Puzzle 2: {d14P2}");
+
             //var d10P1 = Day10Puzzle1();
             //var d10P2 = Day10Puzzle2();
             //Console.WriteLine($"Day 10 - Puzzle 1: {d10P1} Puzzle 2: {d10P2}");
@@ -992,6 +1000,44 @@ namespace Advent_of_Code_2019
             return (int)result;
         }
 
+        static int Day13Puzzle1()
+        {
+
+            return 0;
+        } //Finish 11.2 first
+        static int Day13Puzzle2()
+        {
+
+            return 0;
+        } //Finish 11.2 first
+
+        static int Day14Puzzle1()
+        {
+            var file = new StreamReader(@"..\..\Data\Day14.txt");
+            List<Moon> moons = new List<Moon>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                var tempLine = line.Replace("<", "").Replace(">", "").Split(',').Select(x => x.Split('=')).Select(x => new { key = x[0].Trim(), value = int.Parse(x[1]) });//.Select(l => new {key = l[;
+                Dictionary<string, int> test = new Dictionary<string, int>();
+                foreach (var temp in tempLine)
+                {
+                    test.Add(temp.key, temp.value);
+                }
+
+                moons.Add(new Moon(test["x"], test["y"], test["z"]));
+            }
+
+
+
+            return 0;
+        }
+        static int Day14Puzzle2()
+        {
+
+            return 0;
+        }
+
         //static int Day10Puzzle1()
         //{
 
@@ -999,122 +1045,6 @@ namespace Advent_of_Code_2019
         //}
         //static int Day10Puzzle2()
         //{
-
-        //    return 0;
-        //}
-
-
-
-        static int Complier(List<int> seed, params int[] inputs)
-        {
-            int steps = 0;
-            int inputStep = 0;
-            int? returner = null;
-            for (int curPos = 0; curPos < seed.Count(); curPos += steps)
-            {
-                var instructions = seed[curPos].ToString().Select(d => int.Parse(d.ToString())).Reverse().ToList();
-                instructions[0] = instructions.ElementAtOrDefault(1) * 10 + instructions[0];
-                if (instructions.Count() > 1)
-                    instructions.RemoveAt(1);
-
-                switch (instructions[0])
-                {
-                    case 1: //add
-                        {
-                            steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
-                            seed[pos3] = seed[pos1] + seed[pos2];
-                            break;
-                        }
-                    case 2: //multiply
-                        {
-                            steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
-                            seed[pos3] = seed[pos1] * seed[pos2];
-                            break;
-                        }
-                    case 3: //input
-                        {
-                            steps = 2;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-
-                            //Console.Write("Please give input: ");
-                            //var temp = Convert.ToInt32(Console.ReadLine());
-                            var temp = inputs[inputStep];
-                            inputStep++;
-                            seed[pos1] = temp;
-                        }
-                        break;
-                    case 4: //output
-                        {
-                            steps = 2;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-
-                            //Console.WriteLine($"Output at Position {pos1}: {seed[pos1]}");
-                            returner = seed[pos1];
-                        }
-                        break;
-                    case 5: //jump if true
-                        {
-                            steps = 3;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-
-                            if (seed[pos1] != 0)
-                            {
-                                steps = 0;
-                                curPos = seed[pos2];
-                            }
-                        }
-                        break;
-                    case 6: //jump if false
-                        {
-                            steps = 3;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-
-                            if (seed[pos1] == 0)
-                            {
-                                steps = 0;
-                                curPos = seed[pos2];
-                            }
-                        }
-                        break;
-                    case 7: //less than
-                        {
-                            steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
-                            seed[pos3] = seed[pos1] < seed[pos2] ? 1 : 0;
-                        }
-                        break;
-                    case 8: //equals
-                        {
-                            steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
-                            seed[pos3] = seed[pos1] == seed[pos2] ? 1 : 0;
-                        }
-                        break;
-                    case 99: //exit
-                        return returner ?? seed[0];
-                    default: //we fucked up
-                        return -1;
-                }
-            }
-            return -1;
-        }
-
 
         //    return 0;
         //}
