@@ -735,11 +735,18 @@ namespace Advent_of_Code_2019
 
             return output.Last();
         }
-        static int Day9Puzzle2()
+        static long Day9Puzzle2()
         {
+            var file = new StreamReader(@"..\..\Data\Day09.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
 
-            return 0;
-        } //Finish 7.2 first
+            Compiler compiler = new Compiler(seed, 2);
+            var output = compiler.Compile();
+
+            return output.Last();
+        } 
 
 
         static int Day10Puzzle1()
