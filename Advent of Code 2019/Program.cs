@@ -62,9 +62,9 @@ namespace Advent_of_Code_2019
             var d12P2 = Day12Puzzle2();
             Console.WriteLine($"Day 12 - Puzzle 1: {d12P1} Puzzle 2: {d12P2}");
 
-            //var d13P1 = Day13Puzzle1();
-            //var d13P2 = Day13Puzzle2();
-            //Console.WriteLine($"Day 13 - Puzzle 1: {d13P1} Puzzle 2: {d13P2}");
+            var d13P1 = Day13Puzzle1();
+            var d13P2 = Day13Puzzle2();
+            Console.WriteLine($"Day 13 - Puzzle 1: {d13P1} Puzzle 2: {d13P2}");
 
             var d14P1 = Day14Puzzle1();
             var d14P2 = Day14Puzzle2();
@@ -1155,8 +1155,29 @@ namespace Advent_of_Code_2019
 
         static int Day13Puzzle1()
         {
+            var file = new StreamReader(@"..\..\Data\Day13.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
 
-            return 0;
+            Compiler compiler = new Compiler(seed);
+            var output = compiler.Compile();
+
+            var coords = new List<List<long>>();
+            while (output.Any())
+            {
+                coords.Add(output.Take(3).ToList());
+                output = output.Skip(3).ToList();
+            }
+
+
+            var empty = coords.Where(c => c[2] == 0).ToList();
+            var wall = coords.Where(c => c[2] == 1).ToList();
+            var block = coords.Where(c => c[2] == 2).ToList();
+            var paddle = coords.Where(c => c[2] == 3).ToList();
+            var ball = coords.Where(c => c[2] == 4).ToList();
+
+            return block.Count();
         } //Finish 11.2 first
         static int Day13Puzzle2()
         {
