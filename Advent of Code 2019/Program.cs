@@ -45,9 +45,9 @@ namespace Advent_of_Code_2019
             Console.WriteLine("Puzzle 2:");
             Day8Puzzle2();
 
-            //var d9P1 = Day9Puzzle1();
-            //var d9P2 = Day9Puzzle2();
-            //Console.WriteLine($"Day 9 - Puzzle 1: {d9P1} Puzzle 2: {d9P2}");
+            var d9P1 = Day9Puzzle1();
+            var d9P2 = Day9Puzzle2();
+            Console.WriteLine($"Day 9 - Puzzle 1: {d9P1} Puzzle 2: {d9P2}");
 
             var d10P1 = Day10Puzzle1();
             var d10P2 = Day10Puzzle2();
@@ -116,12 +116,12 @@ namespace Advent_of_Code_2019
 
         }
 
-        static int Day2Puzzle1()
+        static long Day2Puzzle1()
         {
             var file = new StreamReader(@"..\..\Data\Day02.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList();           
+                                   .Select(f => long.Parse(f)).ToList();           
 
             seed[1] = 12;
             seed[2] = 2;
@@ -136,13 +136,13 @@ namespace Advent_of_Code_2019
             var file = new StreamReader(@"..\..\Data\Day02.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList();
+                                   .Select(f => long.Parse(f)).ToList();
 
             for (int first = 0; first < 100; first++)
             {
                 for (int second = 0; second < 100; second++)
                 {
-                    var seedCopy = new List<int>(seed);
+                    var seedCopy = new List<long>(seed);
                     seedCopy[1] = first;
                     seedCopy[2] = second;
 
@@ -418,12 +418,12 @@ namespace Advent_of_Code_2019
         }
 
 
-        static int Day5Puzzle1()
+        static long Day5Puzzle1()
         {
             var file = new StreamReader(@"..\..\Data\Day05.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList();
+                                   .Select(f => long.Parse(f)).ToList();
 
             Compiler compiler = new Compiler(seed);
             compiler.AddInputs(1);
@@ -431,12 +431,12 @@ namespace Advent_of_Code_2019
 
             return output.Last();
         }
-        static int Day5Puzzle2()
+        static long Day5Puzzle2()
         {
             var file = new StreamReader(@"..\..\Data\Day05.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList();
+                                   .Select(f => long.Parse(f)).ToList();
 
             Compiler compiler = new Compiler(seed);
             compiler.AddInputs(5);
@@ -542,14 +542,14 @@ namespace Advent_of_Code_2019
         }
 
 
-        static int Day7Puzzle1()
+        static long Day7Puzzle1()
         {
             var file = new StreamReader(@"..\..\Data\Day07.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList(); 
+                                   .Select(f => long.Parse(f)).ToList(); 
 
-            Dictionary<string, int> tests = new Dictionary<string, int>();
+            Dictionary<string, long> tests = new Dictionary<string, long>();
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
@@ -563,11 +563,11 @@ namespace Advent_of_Code_2019
                                 var order = new List<int> { i, j, k, l, m };
                                 if (order.Distinct().Count() == 5)
                                 {
-                                    var seedCopy1 = new List<int>(seed);
-                                    var seedCopy2 = new List<int>(seed);
-                                    var seedCopy3 = new List<int>(seed);
-                                    var seedCopy4 = new List<int>(seed);
-                                    var seedCopy5 = new List<int>(seed);
+                                    var seedCopy1 = new List<long>(seed);
+                                    var seedCopy2 = new List<long>(seed);
+                                    var seedCopy3 = new List<long>(seed);
+                                    var seedCopy4 = new List<long>(seed);
+                                    var seedCopy5 = new List<long>(seed);
 
                                     var first = new Compiler(seedCopy1, order[0], 0);
                                     var firstResult = first.Compile();
@@ -599,14 +599,14 @@ namespace Advent_of_Code_2019
             var returner = tests.OrderBy(t => t.Value).Last().Value;
             return returner;
         }
-        static int Day7Puzzle2()
+        static long Day7Puzzle2()
         {
             var file = new StreamReader(@"..\..\Data\Day07.txt");
             string fileText = file.ReadToEnd();
             var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(f => int.Parse(f)).ToList(); 
+                                   .Select(f => long.Parse(f)).ToList(); 
             
-            Dictionary<string, int> tests = new Dictionary<string, int>();
+            Dictionary<string, long> tests = new Dictionary<string, long>();
             for (int i = 5; i < 10; i++)
             {
                 for (int j = 5; j < 10; j++)
@@ -620,11 +620,11 @@ namespace Advent_of_Code_2019
                                 var order = new List<int> { i, j, k, l, m };
                                 if (order.Distinct().Count() == 5)
                                 {
-                                    var seedCopy1 = new List<int>(seed);
-                                    var seedCopy2 = new List<int>(seed);
-                                    var seedCopy3 = new List<int>(seed);
-                                    var seedCopy4 = new List<int>(seed);
-                                    var seedCopy5 = new List<int>(seed);
+                                    var seedCopy1 = new List<long>(seed);
+                                    var seedCopy2 = new List<long>(seed);
+                                    var seedCopy3 = new List<long>(seed);
+                                    var seedCopy4 = new List<long>(seed);
+                                    var seedCopy5 = new List<long>(seed);
 
                                     var first = new Compiler(seedCopy1, order[0], 0);
                                     var second = new Compiler(seedCopy2, order[1]);
@@ -632,7 +632,7 @@ namespace Advent_of_Code_2019
                                     var fourth = new Compiler(seedCopy4, order[3]);
                                     var fifth = new Compiler(seedCopy5, order[4]);
 
-                                    List<int> finalResult = new List<int>();
+                                    List<long> finalResult = new List<long>();
                                     while (!fifth.HasTerminated)
                                     {
                                         var firstResult = first.Compile();
@@ -723,11 +723,18 @@ namespace Advent_of_Code_2019
             }
         }
 
-        static int Day9Puzzle1()
+        static long Day9Puzzle1()
         {
+            var file = new StreamReader(@"..\..\Data\Day09.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
 
-            return 0;
-        } //Finish 7.2 first
+            Compiler compiler = new Compiler(seed, 1);
+            var output = compiler.Compile();
+
+            return output.Last();
+        }
         static int Day9Puzzle2()
         {
 
@@ -1058,36 +1065,37 @@ namespace Advent_of_Code_2019
     {
         private int curPos;
         private int inputStep;
-        private List<int> seed;
-        private List<int> inputs;
+        private long relativeBase;
+        private List<long> seed;
+        private List<long> inputs;
 
         public bool HasTerminated { get; private set; }
 
         public Compiler()
         {
-            seed = new List<int>();
-            inputs = new List<int>();
+            seed = new List<long>();
+            inputs = new List<long>();
         }
 
-        public Compiler(List<int> seed, params int[] inputs)
+        public Compiler(List<long> seed, params long[] inputs)
         {
             this.seed = seed;
             this.inputs = inputs.ToList();
         }
 
-        public void AddInputs(params int[] inputs)
+        public void AddInputs(params long[] inputs)
         {
             this.inputs.AddRange(inputs);
         }
                
-        public void Seed(List<int> seed)
+        public void Seed(List<long> seed)
         {
             this.seed = seed;
         }
 
-        public List<int> Compile()
+        public List<long> Compile()
         {
-            List<int> returner = new List<int>();
+            List<long> returner = new List<long>();
             while (curPos < seed.Count())
             {
                 int steps = 0;
@@ -1096,36 +1104,48 @@ namespace Advent_of_Code_2019
                 if (instructions.Count() > 1)
                     instructions.RemoveAt(1);
 
+                var pos1Mode = instructions.ElementAtOrDefault(1);
+                var pos1Offset = pos1Mode == 2 ? (int)relativeBase : 0;
+                var pos1 = pos1Mode == 1 ? curPos + 1 : (int)(seed.ElementAtOrDefault(curPos + 1) + pos1Offset);
+
+                var pos2Mode = instructions.ElementAtOrDefault(2);
+                var pos2Offset = pos2Mode == 2 ? (int)relativeBase : 0;
+                var pos2 = pos2Mode == 1 ? curPos + 2 : (int)(seed.ElementAtOrDefault(curPos + 2) + pos2Offset);
+
+                var pos3Mode = instructions.ElementAtOrDefault(3);
+                var pos3Offset = pos3Mode == 2 ? (int)relativeBase : 0;
+                var pos3 = pos3Mode == 1 ? curPos + 3 : (int)(seed.ElementAtOrDefault(curPos + 3) + pos3Offset);
+
+                if(pos1Mode == 2 || pos2Mode == 2 || pos3Mode == 2)
+                {
+                    int i = 0;
+                }
+
+                var maxRange = Math.Max(pos1, Math.Max(pos2, pos3));
+                if(seed.Count() <= maxRange)
+                {
+                    seed.AddRange(Enumerable.Repeat((long)0, maxRange - seed.Count() + 1));
+                }
+
+
                 #region Switch
                 switch (instructions[0])
                 {
                     case 1: //add
                         {
                             steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
                             seed[pos3] = seed[pos1] + seed[pos2];
                             break;
                         }
                     case 2: //multiply
                         {
                             steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
                             seed[pos3] = seed[pos1] * seed[pos2];
                             break;
                         }
                     case 3: //input
                         {
                             steps = 2;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-
-                            //Console.Write("Please give input: ");
-                            //var temp = Convert.ToInt32(Console.ReadLine());
                             if (inputStep < inputs.Count())
                             {
                                 var temp = inputs[inputStep];
@@ -1141,55 +1161,45 @@ namespace Advent_of_Code_2019
                     case 4: //output
                         {
                             steps = 2;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-
                             returner.Add(seed[pos1]);
                         }
                         break;
                     case 5: //jump if true
                         {
-                            steps = 3;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-
+                            steps = 3;                            
                             if (seed[pos1] != 0)
                             {
                                 steps = 0;
-                                curPos = seed[pos2];
+                                curPos = (int)seed[pos2];
                             }
                         }
                         break;
                     case 6: //jump if false
                         {
-                            steps = 3;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-
+                            steps = 3;                            
                             if (seed[pos1] == 0)
                             {
                                 steps = 0;
-                                curPos = seed[pos2];
+                                curPos = (int)seed[pos2];
                             }
                         }
                         break;
                     case 7: //less than
                         {
                             steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
                             seed[pos3] = seed[pos1] < seed[pos2] ? 1 : 0;
                         }
                         break;
                     case 8: //equals
                         {
-                            steps = 4;
-                            var pos1 = instructions.ElementAtOrDefault(1) == 1 ? curPos + 1 : seed[curPos + 1];
-                            var pos2 = instructions.ElementAtOrDefault(2) == 1 ? curPos + 2 : seed[curPos + 2];
-                            var pos3 = instructions.ElementAtOrDefault(3) == 1 ? curPos + 3 : seed[curPos + 3];
-
+                            steps = 4;                            
                             seed[pos3] = seed[pos1] == seed[pos2] ? 1 : 0;
+                        }
+                        break;
+                    case 9:
+                        {
+                            steps = 2;
+                            relativeBase += seed[pos1];
                         }
                         break;
                     case 99: //exit
