@@ -850,7 +850,7 @@ namespace Advent_of_Code_2019
             var test = coords[index];
 
             var relativeCartesian = new { x = asteroid.r * Math.Cos(asteroid.theta), y = asteroid.r * Math.Sin(asteroid.theta) };
-            var trueCartesian = new { x = (int)Math.Round(bestCoords.Item1 - relativeCartesian.x), y = (int)Math.Round(bestCoords.Item2 - relativeCartesian.y) };
+            var trueCartesian = new { x = (int)Math.Round(bestCoords.x - relativeCartesian.x), y = (int)Math.Round(bestCoords.y - relativeCartesian.y) };
             return trueCartesian.x * 100 + trueCartesian.y;
         }
 
@@ -1178,12 +1178,83 @@ namespace Advent_of_Code_2019
             var ball = coords.Where(c => c[2] == 4).ToList();
 
             return block.Count();
-        } //Finish 11.2 first
-        static int Day13Puzzle2()
+        }
+        static long Day13Puzzle2()
         {
+            var file = new StreamReader(@"..\..\Data\Day13.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
+            seed[0] = 2;
 
-            return 0;
-        } //Finish 11.2 first
+            Compiler compiler = new Compiler(seed);
+
+            long score = 0;
+            var toPrint = Enumerable.Range(0, 20).Select(x => Enumerable.Repeat(' ', 44).ToArray()).ToArray();
+            var paddle = new List<long>();
+            var ball = new List<long>();
+            while (!compiler.HasTerminated)
+            {
+                var output = compiler.Compile();
+
+                var coords = new List<List<long>>();
+                while (output.Any())
+                {
+                    coords.Add(output.Take(3).ToList());
+                    output = output.Skip(3).ToList();
+                }
+
+                var scoreCoord = coords.FirstOrDefault(c => c[0] == -1 && c[1] == 0);
+                coords = coords.Where(c => c != scoreCoord).ToList();
+                score = scoreCoord?[2] ?? score;
+
+
+                //var xMin = coords.OrderBy(c => c[1]).First()[1];
+                //var xMax = coords.OrderBy(c => c[1]).Last()[1];
+                //var yMin = coords.OrderBy(c => c[0]).First()[0];
+                //var yMax = coords.OrderBy(c => c[0]).Last()[0];
+
+                //var empty = coords.Where(c => c[2] == 0).ToList();
+                //var wall = coords.Where(c => c[2] == 1).ToList();
+                //var block = coords.Where(c => c[2] == 2).ToList();
+                paddle = coords.FirstOrDefault(c => c[2] == 3) ?? paddle;
+                ball = coords.FirstOrDefault(c => c[2] == 4) ?? ball;
+
+
+                //for (int i = 0; i <= 19; i++)
+                //{
+                //    var line = new string(' ', 44).ToArray();
+                //    for (int j = 0; j <= 43; j++)
+                //    {
+                //        if (wall.Any(w => w[0] == j && w[1] == i))
+                //        {
+                //            toPrint[i][j] = '#';
+                //        }
+                //        else if (block.Any(b => b[0] == j && b[1] == i))
+                //        {
+                //            toPrint[i][j] = 'X';
+                //        }
+                //        else if (paddle != null && paddle[0] == j && paddle[1] == i)
+                //        {
+                //            toPrint[i][j] = '-';
+                //        }
+                //        else if (ball != null && ball[0] == j && ball[1] == i)
+                //        {
+                //            toPrint[i][j] = '*';
+                //        }
+                //        else if (empty.Any(e => e[0] == j && e[1] == i))
+                //        {
+                //            toPrint[i][j] = ' ';
+                //        }
+                //    }
+                //    Console.WriteLine(toPrint[i]);
+                //}
+
+                //Console.WriteLine($"Score: {score}");
+                compiler.AddInputs(Math.Sign(ball[0] - paddle[0]));
+            }
+            return score;
+        }
 
         static int Day14Puzzle1()
         {
