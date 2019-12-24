@@ -55,7 +55,7 @@ namespace Advent_of_Code_2019
 
             var d11P1 = Day11Puzzle1();
             Console.WriteLine($"Day 11 - Puzzle 1: {d11P1}");
-            Console.WriteLine("Puzzle 2:"); 
+            Console.WriteLine("Puzzle 2:");
             Day11Puzzle2();
 
             var d12P1 = Day12Puzzle1();
@@ -68,11 +68,52 @@ namespace Advent_of_Code_2019
 
             var d14P1 = Day14Puzzle1();
             var d14P2 = Day14Puzzle2();
-            Console.WriteLine($"Day 13 - Puzzle 1: {d14P1} Puzzle 2: {d14P2}");
+            Console.WriteLine($"Day 14 - Puzzle 1: {d14P1} Puzzle 2: {d14P2}");
 
-            //var d10P1 = Day10Puzzle1();
-            //var d10P2 = Day10Puzzle2();
-            //Console.WriteLine($"Day 10 - Puzzle 1: {d10P1} Puzzle 2: {d10P2}");
+            var d15P1 = Day15Puzzle1();
+            var d15P2 = Day15Puzzle2();
+            Console.WriteLine($"Day 15 - Puzzle 1: {d15P1} Puzzle 2: {d15P2}");
+
+            var d16P1 = Day16Puzzle1();
+            var d16P2 = Day16Puzzle2();
+            Console.WriteLine($"Day 16 - Puzzle 1: {d16P1} Puzzle 2: {d16P2}");
+
+            var d17P1 = Day17Puzzle1();
+            var d17P2 = Day17Puzzle2();
+            Console.WriteLine($"Day 17 - Puzzle 1: {d17P1} Puzzle 2: {d17P2}");
+
+            var d18P1 = Day18Puzzle1();
+            var d18P2 = Day18Puzzle2();
+            Console.WriteLine($"Day 18 - Puzzle 1: {d18P1} Puzzle 2: {d18P2}");
+
+            var d19P1 = Day19Puzzle1();
+            var d19P2 = Day19Puzzle2();
+            Console.WriteLine($"Day 19 - Puzzle 1: {d19P1} Puzzle 2: {d19P2}");
+
+            var d20P1 = Day20Puzzle1();
+            var d20P2 = Day20Puzzle2();
+            Console.WriteLine($"Day 20 - Puzzle 1: {d20P1} Puzzle 2: {d20P2}");
+
+            var d21P1 = Day21Puzzle1();
+            var d21P2 = Day21Puzzle2();
+            Console.WriteLine($"Day 21 - Puzzle 1: {d21P1} Puzzle 2: {d21P2}");
+
+            var d22P1 = Day22Puzzle1();
+            var d22P2 = Day22Puzzle2();
+            Console.WriteLine($"Day 22 - Puzzle 1: {d22P1} Puzzle 2: {d22P2}");
+
+            var d23P1 = Day23Puzzle1();
+            var d23P2 = Day23Puzzle2();
+            Console.WriteLine($"Day 23 - Puzzle 1: {d23P1} Puzzle 2: {d23P2}");
+
+            var d24P1 = Day24Puzzle1();
+            var d24P2 = Day24Puzzle2();
+            Console.WriteLine($"Day 24 - Puzzle 1: {d24P1} Puzzle 2: {d24P2}");
+
+            var d25P1 = Day25Puzzle1();
+            var d25P2 = Day25Puzzle2();
+            Console.WriteLine($"Day 25 - Puzzle 1: {d25P1} Puzzle 2: {d25P2}");
+
 
             Console.Write("Finished Puzzles, Press Enter to exit");
             Console.Read();
@@ -1259,29 +1300,190 @@ namespace Advent_of_Code_2019
         static int Day14Puzzle1()
         {
             var file = new StreamReader(@"..\..\Data\Day14.txt");
-            List<Moon> moons = new List<Moon>();
             string line;
+            var splitter = new string[] { " => " };
+            var splitter2 = new string[] { ", " };
+
+            Dictionary<List<Tuple<int, string>>, List<Tuple<int, string>>> formulas = new Dictionary<List<Tuple<int, string>>, List<Tuple<int, string>>>();
             while ((line = file.ReadLine()) != null)
             {
-                var tempLine = line.Replace("<", "").Replace(">", "").Split(',').Select(x => x.Split('=')).Select(x => new { key = x[0].Trim(), value = int.Parse(x[1]) });//.Select(l => new {key = l[;
-                Dictionary<string, int> test = new Dictionary<string, int>();
-                foreach (var temp in tempLine)
-                {
-                    test.Add(temp.key, temp.value);
-                }
+                var tempLine = line.Split(splitter, StringSplitOptions.RemoveEmptyEntries);
+                var reactants = tempLine[0].Split(splitter2, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Split(' ')).Select(p => Tuple.Create(int.Parse(p[0]), p[1])).ToList();
+                var products = tempLine[1].Split(splitter2, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Split( ' ')).Select(p => Tuple.Create(int.Parse(p[0]), p[1])).ToList();
 
-                moons.Add(new Moon(test["x"], test["y"], test["z"]));
+                formulas.Add(products, reactants);
             }
 
-
-
-            return 0;
+            var ores = 0;
+            var final = formulas.FirstOrDefault(f => f.Key.Any(k => k.Item2 == "FUEL"));
+            foreach(var reactant in final.Value)
+            {
+                if(reactant.Item2 == "ORE")
+                {
+                    ores += reactant.Item1;
+                }
+                else
+                {
+                    ores += reactant.Item1 * FindOres(reactant, formulas);
+                }
+            }
+            
+            return ores;
         }
+        static int FindOres(Tuple<int,string> product, Dictionary<List<Tuple<int, string>>, List<Tuple<int, string>>> formulas)
+        {
+            double ores = 0;
+            var formula = formulas.FirstOrDefault(f => f.Key.Any(k => k.Item2 == product.Item2));
+            foreach(var reactant in formula.Value)
+            {
+                if (reactant.Item2 == "ORE")
+                {
+                    ores += reactant.Item1;
+                }
+                else
+                {
+                    ores += reactant.Item1 * FindOres(reactant, formulas);
+                }
+            }
+            return (int)Math.Ceiling(ores / product.Item1);
+        }
+
         static int Day14Puzzle2()
         {
 
             return 0;
         }
+
+
+        static int Day15Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day15Puzzle2()
+        {
+
+            return 0;
+        }
+
+        static int Day16Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day16Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day17Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day17Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day18Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day18Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day19Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day19Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day20Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day20Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day21Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day21Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day22Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day22Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day23Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day23Puzzle2()
+        {
+
+            return 0;
+        }
+
+
+        static int Day24Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day24Puzzle2()
+        {
+
+            return 0;
+        }
+
+        static int Day25Puzzle1()
+        {
+
+            return 0;
+        }
+        static int Day25Puzzle2()
+        {
+
+            return 0;
+        }
+
 
         //static int Day10Puzzle1()
         //{
