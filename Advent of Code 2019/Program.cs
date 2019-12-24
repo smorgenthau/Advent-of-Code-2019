@@ -53,9 +53,9 @@ namespace Advent_of_Code_2019
             var d10P2 = Day10Puzzle2();
             Console.WriteLine($"Day 10 - Puzzle 1: {d10P1} Puzzle 2: {d10P2}");
 
-            //var d11P1 = Day11Puzzle1();
-            //var d11P2 = Day11Puzzle2();
-            //Console.WriteLine($"Day 11 - Puzzle 1: {d11P1} Puzzle 2: {d11P2}");
+            var d11P1 = Day11Puzzle1();
+            var d11P2 = Day11Puzzle2();
+            Console.WriteLine($"Day 11 - Puzzle 1: {d11P1} Puzzle 2: {d11P2}");
 
             var d12P1 = Day12Puzzle1();
             var d12P2 = Day12Puzzle2();
@@ -859,16 +859,78 @@ namespace Advent_of_Code_2019
         }
 
 
-        static int Day11Puzzle1()
+        static long Day11Puzzle1()
         {
+            var file = new StreamReader(@"..\..\Data\Day11.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
 
-            return 0;
-        } //Finish 9.2 first
+            var dirRot = new List<char>() { 'U', 'R', 'D', 'L', 'U', 'R', 'D', 'L', 'U' };
+
+            List<Tuple<int, int>> black = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> white = new List<Tuple<int, int>>();
+
+            var curLoc = Tuple.Create(0, 0);
+            long curCol = 0;
+            var curDir = 'U';
+
+            Compiler compiler = new Compiler(seed);            
+            while (!compiler.HasTerminated)
+            {
+                compiler.AddInputs(curCol);
+                var output = compiler.Compile();
+
+                if (output[0] == 0)
+                {
+                    black.Add(curLoc);
+                    white.Remove(curLoc);
+                }
+                else
+                {
+                    white.Add(curLoc);
+                    black.Remove(curLoc);
+                }
+
+                if(output[1] == 0)
+                {
+                    curDir = dirRot[dirRot.IndexOf(curDir) + 4 - 1];
+                }
+                else
+                {
+                    curDir = dirRot[dirRot.IndexOf(curDir) + 4 + 1];
+                }
+
+                switch (curDir)
+                {
+                    case 'U':
+                        curLoc = Tuple.Create(curLoc.Item1, curLoc.Item2 + 1);
+                        break;
+                    case 'R':
+                        curLoc = Tuple.Create(curLoc.Item1 + 1, curLoc.Item2);
+                        break;
+                    case 'D':
+                        curLoc = Tuple.Create(curLoc.Item1, curLoc.Item2 - 1);
+                        break;
+                    case 'L':
+                        curLoc = Tuple.Create(curLoc.Item1 - 1, curLoc.Item2);
+                        break;
+                }
+
+
+                curCol = white.Contains(curLoc) ? 1 : 0;
+            }
+
+            black = black.Distinct().ToList();
+            white = white.Distinct().ToList();
+
+            return black.Count() + white.Count();// output.Last();
+        }
         static int Day11Puzzle2()
         {
 
             return 0;
-        } //Finish 9.2 first
+        }
 
 
 
@@ -1122,11 +1184,6 @@ namespace Advent_of_Code_2019
                 var pos3Mode = instructions.ElementAtOrDefault(3);
                 var pos3Offset = pos3Mode == 2 ? (int)relativeBase : 0;
                 var pos3 = pos3Mode == 1 ? curPos + 3 : (int)(seed.ElementAtOrDefault(curPos + 3) + pos3Offset);
-
-                if(pos1Mode == 2 || pos2Mode == 2 || pos3Mode == 2)
-                {
-                    int i = 0;
-                }
 
                 var maxRange = Math.Max(pos1, Math.Max(pos2, pos3));
                 if(seed.Count() <= maxRange)
