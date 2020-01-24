@@ -891,7 +891,7 @@ namespace Advent_of_Code_2019
             var test = coords[index];
 
             var relativeCartesian = new { x = asteroid.r * Math.Cos(asteroid.theta), y = asteroid.r * Math.Sin(asteroid.theta) };
-            var trueCartesian = new { x = (int)Math.Round(bestCoords.x - relativeCartesian.x), y = (int)Math.Round(bestCoords.y - relativeCartesian.y) };
+            var trueCartesian = new { x = (int)Math.Round(bestCoords.Item1 - relativeCartesian.x), y = (int)Math.Round(bestCoords.Item2 - relativeCartesian.y) };
             return trueCartesian.x * 100 + trueCartesian.y;
         }
 
@@ -1357,6 +1357,62 @@ namespace Advent_of_Code_2019
 
         static int Day15Puzzle1()
         {
+            var file = new StreamReader(@"..\..\Data\Day15.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(f => long.Parse(f)).ToList();
+
+            Compiler compiler = new Compiler(seed);
+
+            List<Tuple<int, int>> walls = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> steps = new List<Tuple<int, int>>();
+            Tuple<int, int> oxygen = Tuple.Create(0, 0);
+            Tuple<int, int> curLoc = Tuple.Create(0, 0);
+            while (!compiler.HasTerminated)
+            {
+                long input = 0;
+                Tuple<int, int> result = Tuple.Create(0, 0);
+                if (!walls.Any(w => w.Item1 == curLoc.Item1 && w.Item2 == curLoc.Item2 - 1))
+                {
+                    input = 1;
+                    result = Tuple.Create(curLoc.Item1, curLoc.Item2 - 1);
+                }
+                else if (!walls.Any(w => w.Item1 == curLoc.Item1 - 1 && w.Item2 == curLoc.Item2))
+                {
+                    input = 3;
+                    result = Tuple.Create(curLoc.Item1 - 1, curLoc.Item2);
+                }
+                else if (!walls.Any(w => w.Item1 == curLoc.Item1 && w.Item2 == curLoc.Item2 + 1))
+                {
+                    input = 2;
+                    result = Tuple.Create(curLoc.Item1, curLoc.Item2 + 1);
+                }
+                else if (!walls.Any(w => w.Item1 == curLoc.Item1 + 1 && w.Item2 == curLoc.Item2))
+                {
+                    input = 4;
+                    result = Tuple.Create(curLoc.Item1 + 1, curLoc.Item2);
+                }
+
+                compiler.AddInputs(input);
+                var output = compiler.Compile();
+
+                switch (output.Last())
+                {
+                    case 0:
+                        walls.Add(result);
+                        break;
+                    case 1:
+                        steps.Add(result);
+                        curLoc = result;
+                        break;
+                    case 2:
+                        oxygen = result;
+                        break;
+                }
+
+
+
+            }
 
             return 0;
         }
@@ -1368,13 +1424,82 @@ namespace Advent_of_Code_2019
 
         static int Day16Puzzle1()
         {
+            var file = new StreamReader(@"..\..\Data\Day16.txt");
+            string fileText = file.ReadToEnd();
+            var seed = fileText.Select(f => int.Parse(f.ToString())).ToList();
 
-            return 0;
+
+            seed = "12345678".Select(d => int.Parse(d.ToString())).ToList();
+
+            var basePattern = new List<int>() { 0, 1, 0, -1 };
+            var testjkdslajdslka = new List<int>();
+            for(int phase = 1; phase <= 100; phase++)
+            {
+                var newList = new List<int>();
+                var testList = new List<int>();
+                for (int digit = 0; digit < seed.Count(); digit++)
+                {
+                    var digitPattern = new List<int>();
+                    foreach(var modifier in basePattern)
+                    {
+                        digitPattern.AddRange(Enumerable.Repeat(modifier, digit + 1));
+                    }
+
+                    int digitValue = 0;
+                    for (int digit2 = 0; digit2 < seed.Count(); digit2++)
+                    {
+                        digitValue += seed[digit2] * digitPattern[(digit2 + 1) % digitPattern.Count()];
+                    }
+                    newList.Add(Math.Abs(digitValue) % 10);
+                    var test1 = seed.Count() - digit - 1;
+                    var test2 = seed[test1];
+                    var test3 = testList.FirstOrDefault();
+                    var test4 = (test2 + test3) % 10;
+                    testList.Insert(0,test4);
+                }
+                if (testList.SequenceEqual(newList))
+                {
+                    int i = 0;
+                }
+                seed = newList;
+                testjkdslajdslka = testList;
+            }
+
+            var result = string.Join("", seed);
+            var final = Convert.ToInt32(result.Substring(0, 8));
+            return final;
         }
         static int Day16Puzzle2()
         {
 
-            return 0;
+            var file = new StreamReader(@"..\..\Data\Day16.txt");
+            string fileText = file.ReadToEnd();
+            
+            fileText = "03036732577212944063491565474664";
+
+            var textRepeat = string.Concat(Enumerable.Repeat(fileText, 10000));
+            var testjskddadjklajlkds = textRepeat.Length;
+            var offset = Convert.ToInt32(textRepeat.Substring(0, 7));
+            var seed = textRepeat.Substring(offset);
+            
+            var trueSeed = seed.Select(s => Convert.ToInt32(s)).ToList();
+            for (int phase = 1; phase <= 100; phase++)
+            {
+                var newList = new List<int>();
+                for (int digit = 0; digit < trueSeed.Count(); digit++)
+                {
+                    var test1 = seed.Count() - digit - 1;
+                    var test2 = seed[test1];
+                    var test3 = newList.FirstOrDefault();
+                    var test4 = (test2 + test3) % 10;
+                    newList.Insert(0, test4);
+                }
+                trueSeed = newList;
+            }
+
+            var result = string.Join("", seed);
+            var final = Convert.ToInt32(result.Substring(0, 8));
+            return final;
         }
 
 
